@@ -166,10 +166,24 @@ async function startServer() {
     app.delete("/api/posts/:id", authMiddleware, async (req, res) => {
       try {
         const id = req.params.id;
-        const result = await postsCollection.deleteOne({ _id: new ObjectId(id) });
-        if (result.deletedCount === 0) return res.status(404).json({ success: false, message: "Пост не найден" });
+        let query;
+
+        // Проверяем, валидный ли ObjectId
+        if (/^[a-f\d]{24}$/i.test(id)) {
+          query = { _id: new ObjectId(id) };
+        } else {
+          query = { id }; // fallback, если id в другом формате
+        }
+
+        const result = await postsCollection.deleteOne(query);
+
+        if (result.deletedCount === 0) {
+          return res.status(404).json({ success: false, message: "Пост не найден" });
+        }
+
         res.json({ success: true });
-      } catch {
+      } catch (err) {
+        console.error("Ошибка удаления поста:", err);
         res.status(500).json({ success: false, message: "Ошибка удаления поста" });
       }
     });

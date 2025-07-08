@@ -81,14 +81,17 @@ function renderPostList() {
   }
 
   data.posts.forEach(post => {
+    // В MongoDB _id — объект, приведём к строке
+    const idStr = post._id ? post._id.toString() : "";
+
     const div = document.createElement("div");
     div.className = "post admin-post";
 
     div.innerHTML = `
       ${post.image ? `<img src="${post.image}" alt="${escapeHtml(post.title)}" style="max-width: 100%; border-radius: 8px; margin-bottom:10px;" />` : ""}
       <strong>${escapeHtml(post.title)}</strong> — ${escapeHtml(post.price)}<br/>
-      <button data-id="${post.id}" class="edit-post-btn">Редактировать</button>
-      <button data-id="${post.id}" class="delete-post-btn">Удалить</button>
+      <button data-id="${idStr}" class="edit-post-btn">Редактировать</button>
+      <button data-id="${idStr}" class="delete-post-btn">Удалить</button>
     `;
 
     postListDiv.appendChild(div);
@@ -112,10 +115,11 @@ function renderPostList() {
 }
 
 function editPost(id) {
-  const post = data.posts.find(p => p.id === id);
+  // Найти пост по _id (строке)
+  const post = data.posts.find(p => p._id && p._id.toString() === id);
   if (!post) return alert("Пост не найден");
 
-  postIdInput.value = post.id;
+  postIdInput.value = post._id.toString();
   postTitleInput.value = post.title;
   postPriceInput.value = post.price;
   postDescriptionInput.value = post.description;
@@ -202,7 +206,6 @@ document.getElementById("post-clear").onclick = clearPostForm;
 settingsForm.addEventListener("submit", e => {
   e.preventDefault();
 
-  // Собираем все настройки, кроме логина/пароля
   const newSettings = {
     siteTitle: titleInput.value.trim(),
     greeting: { ru: greetingInput.value.trim() },
@@ -212,7 +215,6 @@ settingsForm.addEventListener("submit", e => {
     termsText: termsTextInput.value.trim(),
   };
 
-  // Отправляем настройки (без auth)
   fetch(SETTINGS_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -230,7 +232,6 @@ settingsForm.addEventListener("submit", e => {
     .catch(() => alert("Ошибка при сохранении настроек"));
 });
 
-// Обработка смены логина и пароля — отправляем все настройки, включая auth
 credentialsForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -267,7 +268,6 @@ credentialsForm.addEventListener("submit", (e) => {
         loginInput.value = "";
         passwordInput.value = "";
 
-        // Выйти из сессии и перенаправить на страницу логина
         fetch('/logout', { method: 'POST' }).finally(() => {
           window.location.href = '/login.html';
         });
@@ -279,6 +279,10 @@ credentialsForm.addEventListener("submit", (e) => {
 });
 
 function deletePost(id) {
+  if (!id) {
+    alert("ID аккаунта не указан");
+    return;
+  }
   fetch(`${POSTS_URL}/${id}`, {
     method: "DELETE",
   })
