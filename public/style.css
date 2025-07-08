@@ -1,0 +1,218 @@
+/* Общие стили */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('Flux_Dev_Create_a_futuristic_cyberpunkthemed_image_for_the_Nyx_2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* затемняющий и размытый слой */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  z-index: -1;
+}
+
+/* Хедер */
+header {
+  background-color: transparent;
+  padding: 20px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  color: #00ffff;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* Ссылка на админку */
+.admin-access {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  color: #00ffff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: none;
+  transition: 0.3s;
+}
+.admin-access:hover {
+  background-color: rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 10px #00ffff;
+}
+
+/* Контейнер */
+.container {
+  flex: 1;
+  width: 100%;
+  max-width: 1600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 12px;
+  box-shadow: 0 0 30px #00ffff;
+}
+
+/* Вступительный текст */
+#greeting {
+  font-size: 1.3rem;
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 30px;
+  border: 2px solid #00ffff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #00ffff;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Верхние кнопки */
+.top-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.main-btn {
+  background-color: #003366;
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  padding: 12px 25px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffff;
+  text-shadow: 0 0 6px #00ffff;
+}
+.main-btn:hover {
+  background-color: #00ffff;
+  color: #003366;
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+}
+
+/* Заголовок актуальных аккаунтов */
+h2 {
+  color: #00ffff;
+  text-shadow: 0 0 8px #00ffff;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Список постов - изменено на flex с переносом */
+.posts {
+  display: flex;
+  flex-wrap: wrap;          /* разрешаем перенос карточек */
+  gap: 30px;                /* расстояние между карточками */
+  justify-content: flex-start; /* выравнивание по левому краю */
+  width: 100%;
+}
+
+/* Каждый пост */
+.post {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00ffff;
+  color: #cceeff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+  flex: 0 0 calc((100% - 90px) / 4); /* 4 карточки в ряд, с учётом gap (30px * 3 = 90px) */
+  box-sizing: border-box;
+  margin-bottom: 30px; /* отступ снизу */
+}
+
+/* Фото в посте */
+.post img {
+  display: block;
+  width: 140px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+/* Название поста */
+.post h3 {
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 0 0 5px #00ffff;
+}
+
+/* Описание */
+.post p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Цена */
+.post .price {
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #00ffff;
+  text-shadow: 0 0 6px #00ffff;
+}
+
+/* Кнопка купить */
+.post a.buy-btn {
+  align-self: flex-start;
+  background-color: #003366;
+  color: #00ffff;
+  padding: 10px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 10px #00ffff;
+  transition: all 0.3s ease;
+}
+.post a.buy-btn:hover {
+  background-color: #00ffff;
+  color: #003366;
+  box-shadow: 0 0 25px #00ffff, 0 0 40px #00ffff;
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 768px) {
+  .posts {
+    flex-direction: column;
+  }
+  .post {
+    flex: 1 1 100%;
+  }
+  #greeting {
+    font-size: 1rem;
+    padding: 15px;
+  }
+  .main-btn {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+}

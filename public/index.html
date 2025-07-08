@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Магазин аккаунтов</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1 id="site-title">NYXXIE_HUB</h1>
+    <button id="adminBtn" class="admin-access" style="cursor:pointer; background:none; border:none; color:#00ffff; font-weight:bold; font-size:1rem;">
+      АДМИН
+    </button>
+  </header>
+
+  <div class="container">
+    <div id="greeting">Здравствуйте! 👋 Добро пожаловать в наш магазин!</div>
+
+    <div class="top-buttons">
+      <button id="btn-catalog" class="main-btn">Каталог аккаунтов</button>
+      <button id="btn-terms" class="main-btn">Условия возврата</button>
+    </div>
+
+    <div id="catalog-text" style="display:none; margin:20px auto; color:#00ffff; max-width:600px; text-align:center;"></div>
+    <div id="terms-text" style="display:none; margin:20px auto; color:#00ffff; max-width:600px; text-align:center;"></div>
+
+    <h2>🔥 Актуальные аккаунты</h2>
+    <div class="posts" id="posts-container"></div>
+  </div>
+
+  <!-- Модальное окно логина -->
+  <div id="loginModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:9999;">
+    <div style="background:#111; padding:20px; border-radius:8px; width:320px; color:#0ff; box-shadow: 0 0 15px #00ffff;">
+      <h3 style="margin-top:0; margin-bottom:15px;">Вход в админку</h3>
+      <form id="loginForm">
+        <input type="text" name="login" placeholder="Логин" required style="width:100%; margin-bottom:10px; padding:8px; border-radius:4px; border:none;"/>
+        <input type="password" name="password" placeholder="Пароль" required style="width:100%; margin-bottom:10px; padding:8px; border-radius:4px; border:none;"/>
+        <button type="submit" style="width:100%; padding:10px; background:#00ffff; border:none; cursor:pointer; font-weight:bold; color:#000;">Войти</button>
+        <button type="button" id="closeModal" style="margin-top:10px; width:100%; padding:8px; background:#222; border:none; color:#0ff; cursor:pointer; border-radius:4px;">Отмена</button>
+      </form>
+      <div id="loginMessage" style="margin-top:10px; color:#f00; min-height:20px;"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <script>
+    const adminBtn = document.getElementById('adminBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+
+    adminBtn.addEventListener('click', () => {
+      loginModal.style.display = 'flex';
+      loginMessage.textContent = '';
+      loginForm.reset();
+    });
+
+    closeModal.addEventListener('click', () => {
+      loginModal.style.display = 'none';
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginMessage.textContent = '';
+      const formData = new FormData(loginForm);
+      const login = formData.get('login');
+      const password = formData.get('password');
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ login, password }),
+          credentials: 'include'
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          window.location.href = '/admin.html';
+        } else {
+          loginMessage.textContent = 'Неверный логин или пароль';
+        }
+      } catch (err) {
+        loginMessage.textContent = 'Ошибка соединения';
+      }
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Админка магазина</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Админка магазина</h1>
+    <a class="admin-access" href="/">На сайт</a>
+    <button id="logoutBtn" style="margin-left:20px; padding:6px 12px; cursor:pointer;">Выйти</button>
+  </header>
+
+  <div class="container admin-container">
+
+    <form id="settings-form" class="admin-form">
+      <h2>Настройки магазина</h2>
+
+      <label>Название магазина (заголовок):</label>
+      <input type="text" id="site-title" placeholder="NYXXIE_HUB" />
+
+      <label>Текст приветствия (RU):</label>
+      <input type="text" id="greeting-ru" />
+
+      <label>Текст кнопки "Каталог аккаунтов":</label>
+      <input type="text" id="btn-catalog-text" />
+
+      <label>Текст кнопки "Условия возврата":</label>
+      <input type="text" id="btn-terms-text" />
+
+      <label>Текст под кнопкой "Каталог аккаунтов" (HTML):</label>
+      <textarea id="catalog-text-input" rows="4" placeholder="Введите HTML для каталога..."></textarea>
+
+      <label>Текст под кнопкой "Условия возврата" (HTML):</label>
+      <textarea id="terms-text-input" rows="4" placeholder="Введите HTML для условий возврата..."></textarea>
+
+      <button type="submit">Сохранить настройки</button>
+    </form>
+
+    <!-- 🔐 Форма для смены логина и пароля -->
+    <form id="credentials-form" class="admin-form" style="margin-top: 30px;">
+      <h2>Смена логина и пароля администратора</h2>
+
+      <label>Новый логин:</label>
+      <input type="text" id="admin-login" placeholder="Новый логин" required />
+
+      <label>Новый пароль:</label>
+      <input type="password" id="admin-password" placeholder="Новый пароль" required />
+
+      <button type="submit">Обновить данные администратора</button>
+    </form>
+
+    <hr />
+
+    <h2>Управление аккаунтами</h2>
+    <form id="post-form" class="admin-form">
+      <input type="hidden" id="post-id" />
+
+      <label>Название аккаунта:</label>
+      <input type="text" id="post-title" required />
+
+      <label>Цена:</label>
+      <input type="text" id="post-price" required />
+
+      <label>Описание:</label>
+      <textarea id="post-description" rows="3" required></textarea>
+
+      <label>Telegram ник (с @):</label>
+      <input type="text" id="post-link" required />
+
+      <label>Фото аккаунта:</label>
+      <input type="file" id="post-image" accept="image/*" />
+      <div id="post-image-preview" style="margin-top:10px; max-width: 250px;"></div>
+
+      <button type="submit">Сохранить аккаунт</button>
+      <button type="button" id="post-clear">Очистить форму</button>
+    </form>
+
+    <div id="post-list"></div>
+  </div>
+
+  <script>
+    document.getElementById('logoutBtn').onclick = () => {
+      fetch('/logout', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = '/login.html';
+          } else {
+            alert("Ошибка при выходе");
+          }
+        })
+        .catch(() => alert("Ошибка сети"));
+    };
+  </script>
+
+  <script src="admin.js"></script>
+</body>
+</html>

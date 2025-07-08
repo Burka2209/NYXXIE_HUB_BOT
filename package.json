@@ -1,0 +1,20 @@
+{
+  "name": "my-vds-site",
+  "version": "1.0.0",
+  "description": "Одностраничный сайт с админкой для продажи аккаунтов",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mongodb": "^6.17.0",
+    "sqlite3": "^5.1.7"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

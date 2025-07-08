@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Вход в админку</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; }
+    label, input { display: block; width: 100%; margin-bottom: 10px; }
+    button { padding: 10px; width: 100%; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Вход в админку</h1>
+  <div id="error" class="error"></div>
+  <form id="login-form">
+    <label>Логин
+      <input type="text" id="login" required />
+    </label>
+    <label>Пароль
+      <input type="password" id="password" required />
+    </label>
+    <button type="submit">Войти</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const errorDiv = document.getElementById("error");
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      errorDiv.textContent = "";
+
+      const login = document.getElementById("login").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const res = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ login, password })
+        });
+
+        if (res.ok) {
+          window.location.href = "/admin.html";
+        } else {
+          const data = await res.json();
+          errorDiv.textContent = data.message || "Ошибка входа";
+        }
+      } catch {
+        errorDiv.textContent = "Ошибка сети";
+      }
+    };
+  </script>
+</body>
+</html>
