@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const { MongoClient, ObjectId } = require("mongodb");
+const MongoStore = require("connect-mongo");  // <-- импорт connect-mongo
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,7 +17,6 @@ let postsCollection;
 let settingsCollection;
 
 async function migrateIfNeeded() {
-  // Проверяем, есть ли уже посты и настройки в базе, чтобы не мигрировать лишний раз
   const postsCount = await postsCollection.countDocuments();
   const settingsCount = await settingsCollection.countDocuments();
 
@@ -65,17 +65,23 @@ async function startServer() {
     postsCollection = db.collection("posts");
     settingsCollection = db.collection("settings");
 
-    // Запускаем миграцию при старте (если данных еще нет)
     await migrateIfNeeded();
 
     app.use(bodyParser.json({ limit: "10mb" }));
     app.use(express.static(path.join(__dirname, "public")));
 
+    // Настройка сессий с использованием MongoDB в качестве хранилища
     app.use(session({
       secret: "yourSuperSecretKey123!@#",
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 1800000 }
+      store: MongoStore.create({
+        client: client,
+        dbName: "mydatabase",
+        collectionName: "sessions",
+        ttl: 60 * 30 // 30 минут в секундах
+      }),
+      cookie: { maxAge: 1800000 } // 30 минут
     }));
 
     async function getAuthSettings() {
@@ -168,7 +174,7 @@ async function startServer() {
         const id = req.params.id;
         let query;
 
-        // Проверяем, валидный ли ObjectId
+        // Проверяем валидность ObjectId
         if (/^[a-f\d]{24}$/i.test(id)) {
           query = { _id: new ObjectId(id) };
         } else {
@@ -176,11 +182,7 @@ async function startServer() {
         }
 
         const result = await postsCollection.deleteOne(query);
-
-        if (result.deletedCount === 0) {
-          return res.status(404).json({ success: false, message: "Пост не найден" });
-        }
-
+        if (result.deletedCount === 0) return res.status(404).json({ success: false, message: "Пост не найден" });
         res.json({ success: true });
       } catch (err) {
         console.error("Ошибка удаления поста:", err);
@@ -214,6 +216,7 @@ async function startServer() {
     app.get("/admin.html", authMiddleware, (req, res) => {
       res.sendFile(path.join(__dirname, "private", "admin.html"));
     });
+
     app.get("/admin.js", authMiddleware, (req, res) => {
       res.sendFile(path.join(__dirname, "private", "admin.js"));
     });
