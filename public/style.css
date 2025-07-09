@@ -196,6 +196,22 @@ h2 {
   box-shadow: 0 0 25px #00ffff, 0 0 40px #00ffff;
 }
 
+/* Скрытие/появление заголовка при прокрутке */
+.fade-header {
+  transition: opacity 0.5s ease;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  font-size: 32px;
+  opacity: 1;
+}
+.fade-header.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Адаптив для мобильных */
 @media (max-width: 768px) {
   .posts {

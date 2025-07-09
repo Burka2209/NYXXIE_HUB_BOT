@@ -15,7 +15,12 @@ let data = null;
 async function fetchData() {
   try {
     const res = await fetch('/api/data');
-    data = await res.json();
+    const text = await res.text();
+    console.log('Ответ сервера /api/data:', text);
+
+    // Попытка распарсить JSON из текста
+    const json = JSON.parse(text);
+    data = json;
 
     // Настройки
     siteTitleEl.textContent = data.settings.siteTitle || 'Магазин аккаунтов';

@@ -8,7 +8,7 @@
 </head>
 <body>
   <header>
-    <h1 id="site-title">NYXXIE_HUB</h1>
+    <h1 id="main-title" class="fade-header">NYXXIE_HUB</h1>
     <button id="adminBtn" class="admin-access" style="cursor:pointer; background:none; border:none; color:#00ffff; font-weight:bold; font-size:1rem;">
       АДМИН
     </button>
@@ -46,6 +46,7 @@
 
   <script src="script.js"></script>
 
+  <!-- Скрипт для админки -->
   <script>
     const adminBtn = document.getElementById('adminBtn');
     const loginModal = document.getElementById('loginModal');
@@ -89,6 +90,56 @@
       }
     });
   </script>
+
+  <!-- Скрипт для скрытия заголовка при прокрутке -->
+  <script>
+    const header = document.getElementById("main-title");
+    let lastScroll = 0;
+
+    window.addEventListener("scroll", () => {
+      const currentScroll = window.scrollY;
+
+      if (currentScroll > lastScroll && currentScroll > 50) {
+        header.classList.add("hidden");
+      } else {
+        header.classList.remove("hidden");
+      }
+
+      lastScroll = currentScroll;
+    });
+  </script>
+
+  <!-- Скрипт для загрузки постов -->
+  <script>
+    async function loadPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        const posts = await res.json();
+        renderPosts(posts);
+      } catch (err) {
+        console.error("Ошибка загрузки постов:", err);
+      }
+    }
+
+    function renderPosts(posts) {
+      const container = document.getElementById('posts-container');
+      container.innerHTML = '';
+
+      posts.forEach(post => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post';
+        postEl.innerHTML = `
+          <img src="${post.imageUrl}" alt="">
+          <h3>${post.title}</h3>
+          <p>${post.description}</p>
+          <div class="price">${post.price}</div>
+          <a href="${post.link}" class="buy-btn">Купить</a>
+        `;
+        container.appendChild(postEl);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadPosts);
+  </script>
 </body>
 </html>
-
