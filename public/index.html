@@ -113,7 +113,7 @@
   <script>
     async function loadPosts() {
       try {
-        const res = await fetch('/api/posts');
+        const res = await fetch('/api/posts', { credentials: 'include' });
         const posts = await res.json();
         renderPosts(posts);
       } catch (err) {
@@ -129,11 +129,11 @@
         const postEl = document.createElement('div');
         postEl.className = 'post';
         postEl.innerHTML = `
-          <img src="${post.imageUrl}" alt="">
+          <img src="${post.image}" alt="${post.title || ''}">
           <h3>${post.title}</h3>
           <p>${post.description}</p>
           <div class="price">${post.price}</div>
-          <a href="${post.link}" class="buy-btn">Купить</a>
+          <a href="https://t.me/${post.link.replace(/^@/, '')}" class="buy-btn" target="_blank" rel="noopener noreferrer">Купить</a>
         `;
         container.appendChild(postEl);
       });

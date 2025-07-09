@@ -216,9 +216,17 @@ h2 {
 @media (max-width: 768px) {
   .posts {
     flex-direction: column;
+    padding-left: 15px;   /* добавить внутренние отступы */
+    padding-right: 15px;
+    box-sizing: border-box; /* чтобы padding не ломал ширину */
   }
   .post {
-    flex: 1 1 100%;
+    flex: 0 0 auto;       /* убрать растяжение на 100% */
+    max-width: 100%;      /* не больше родителя */
+    width: 100%;          /* занимает всю ширину контейнера с паддингом */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;  /* отступ между карточками */
   }
   #greeting {
     font-size: 1rem;
