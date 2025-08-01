@@ -9,7 +9,7 @@ const MongoStore = require("connect-mongo");  // <-- импорт connect-mongo
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const uri = "mongodb+srv://timati2209:s7WVPYvbwJLgrbqj@cluster0.m57nnau.mongodb.net/mydatabase?retryWrites=true&w=majority";
+const uri = "mongodb+srv://timati2209:!BB85WtE$TP$crm@cluster0.m57nnau.mongodb.net/mydatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
 
 let db;
